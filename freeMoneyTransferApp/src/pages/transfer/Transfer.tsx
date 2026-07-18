@@ -4,10 +4,22 @@ import { Minus, Plus } from "lucide-react";
 import arrowImg from "../../assets/images/Back.png";
 import BackIcon from "../../assets/images/backIcone.png";
 import CardImg from "../../assets/images/card.png";
+// import { useNavigate } from "react-router-dom";
 
 const Transfer = () => {
   const [amount, setAmount] = useState(150);
   const [selectedRecipient, setSelectedRecipient] = useState<number>(2);
+  // const navigate = useNavigate();
+
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const [transaction, setTransaction] = useState({
+    name: "",
+    amount: 0,
+    transactionId: "",
+    transferCost: 0,
+    date: "",
+  });
 
   const recipients = [
     {
@@ -52,14 +64,89 @@ const Transfer = () => {
   const handleSendMoney = () => {
     if (!selectedUser) return;
 
-    alert(`Sending $${amount.toFixed(2)} to ${selectedUser.name}`);
+    setTransaction({
+      name: selectedUser.name,
+      amount,
+      transactionId: Math.random().toString().slice(2, 12),
+      transferCost: 0,
+      date: new Date().toLocaleString(),
+    });
+
+    setShowSuccess(true);
   };
+
+  if (showSuccess) {
+    return (
+      <MobileView>
+        <div className="h-[812px] w-[375px] rounded-[40px] bg-[#F7F7F7] px-7 py-8 shadow-xl flex flex-col items-center">
+          {/* Close */}
+          <button onClick={() => setShowSuccess(false)} className="text-3xl">
+            ✕
+          </button>
+
+          <div className="mt-10 rounded-[25px] bg-[#07255B] p-8">
+            <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-[#FF8C86]">
+              <span className="text-6xl text-white">✓</span>
+            </div>
+
+            <h2 className="mt-8 text-center text-[22px] font-bold text-white">
+              Transferred Successfully
+            </h2>
+
+            <div className="mt-10 space-y-6">
+              <div className="flex justify-between">
+                <span className="text-[#7381A9] text-[12px]">Name</span>
+                <span className="text-white text-[12px]">{transaction.name}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-[#7381A9]  text-[12px]">
+                  Transaction ID
+                </span>
+                <span className="text-white text-[12px]">{transaction.transactionId}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-[#7381A9]  text-[12px]">Amount</span>
+                <span className="text-white text-[12px]">
+                  ${transaction.amount.toFixed(2)}
+                </span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-[#7381A9]  text-[12px]">
+                  Transfer Cost
+                </span>
+                <span className="text-white text-[12px]">
+                  ${transaction.transferCost.toFixed(2)}
+                </span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-[#7381A9]  text-[12px]">Time & Date</span>
+                <span className="text-right text-white text-[12px]">
+                  {transaction.date}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setShowSuccess(false)}
+            className="mt-15 h-13 w-60 rounded-[10px] bg-[#FF8C86] py-5 text-xl font-semibold text-white flex flex-col justify-center items-center"
+          >
+            DONE
+          </button>
+        </div>
+      </MobileView>
+    );
+  }
 
   return (
     <MobileView>
       <div className="h-[812px] w-[375px] rounded-[40px] bg-[#F7F7F7] px-7 py-8 shadow-xl">
         {/* Header */}
-        <img src={arrowImg} alt=""/>
+        <img src={arrowImg} alt="" />
 
         <div className="mt-3 flex items-center">
           <img src={BackIcon} alt="" />
